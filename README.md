@@ -68,56 +68,56 @@ The script has some built-in error handling for retrying operations where possib
 
 Here's what you can expect to see in the logs when a failure occurs during the add/commit phase:
 
-> ...
-> 2024-03-20 17:46:24 CDT migration       INFO    Deleting /Users/chris.taylor/code/github/github-scripts/migration/work/tf-azurerm-module_primitive-monitor_diagnostic_setting/go.sum
-> 2024-03-20 17:46:24 CDT migration       INFO    About to run go mod tidy in /Users/chris.taylor/code/github/github-scripts/migration/work/tf-azurerm-module_primitive-monitor_diagnostic_setting...
-> 2024-03-20 17:46:25 CDT migration       INFO    Successfully ran go mod tidy
-> 2024-03-20 17:46:25 CDT migration       INFO    Adding changes and committing
-> 2024-03-20 17:46:49 CDT migration       ERROR   Failure when calling <function add_and_commit at 0x107532480>. This operation can be retried or bypassed!
-> ...
-> Terraform validate.......................................................Failed
-> - hook id: terraform_validate
-> - exit code: 1
-> 
-> 'terraform init' failed, 'terraform validate' skipped: examples/diagnostic_setting
-> ...
-> Error: Failed to download module
-> │ 
-> │   on main.tf line 25:
-> │   25: module "log_analytics_workspace" {
-> │ 
-> │ Could not download module "log_analytics_workspace" (main.tf:25) source
-> │ code from
-> │ "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-log_analytics_workspace.git?ref=0.1.0":
-> │ error downloading
-> │ 'https://github.com/launchbynttdata/tf-azurerm-module_primitive-log_analytics_workspace.git?ref=0.1.0':
-> │ /opt/homebrew/Cellar/git/2.40.1/libexec/git-core/git exited with 128:
-> │ Cloning into '.terraform/modules/log_analytics_workspace'...
-> │ remote: Repository not found.
-> │ fatal: repository
-> │ 'https://github.com/launchbynttdata/tf-azurerm-module_primitive-log_analytics_workspace.git/'
-> │ not found
-> │ 
+> ...  
+> 2024-03-20 17:46:24 CDT migration       INFO    Deleting /Users/chris.taylor/code/github/github-scripts/migration/work/tf-azurerm-module_primitive-monitor_diagnostic_setting/go.sum  
+> 2024-03-20 17:46:24 CDT migration       INFO    About to run go mod tidy in /Users/chris.taylor/code/github/github-scripts/migration/work/tf-azurerm-module_primitive-monitor_diagnostic_setting...  
+> 2024-03-20 17:46:25 CDT migration       INFO    Successfully ran go mod tidy  
+> 2024-03-20 17:46:25 CDT migration       INFO    Adding changes and committing  
+> 2024-03-20 17:46:49 CDT migration       ERROR   Failure when calling <function add_and_commit at 0x107532480>. This operation can be retried or bypassed!  
+> ...  
+> Terraform validate.......................................................Failed  
+> - hook id: terraform_validate  
+> - exit code: 1  
+>   
+> 'terraform init' failed, 'terraform validate' skipped: examples/diagnostic_setting  
+> ...  
+> Error: Failed to download module  
+> │   
+> │   on main.tf line 25:  
+> │   25: module "log_analytics_workspace" {  
+> │   
+> │ Could not download module "log_analytics_workspace" (main.tf:25) source  
+> │ code from  
+> │ "git::https://github.com/launchbynttdata/tf-azurerm-module_primitive-log_analytics_workspace.git?ref=0.1.0":  
+> │ error downloading  
+> │ 'https://github.com/launchbynttdata/tf-azurerm-module_primitive-log_analytics_workspace.git?ref=0.1.0':  
+> │ /opt/homebrew/Cellar/git/2.40.1/libexec/git-core/git exited with 128:  
+> │ Cloning into '.terraform/modules/log_analytics_workspace'...  
+> │ remote: Repository not found.  
+> │ fatal: repository  
+> │ 'https://github.com/launchbynttdata/tf-azurerm-module_primitive-log_analytics_workspace.git/'  
+> │ not found  
+> │   
 
 This repository missing is completely expected, as it hasn't been migrated to the new organization yet. **If all the failures you experience for a single module are failures to download modules like the above, you are clear to continue migrating this repo**. If you experience any other sort of failure, please let Chris know immediately!
 
 At the very bottom of the failure message, you will be prompted for an action:
 
-> ...
-> golangci-lint............................................................Passed
-> Detect secrets...........................................................Passed'
-> Please enter 'abort', 'retry', or 'bypass':
+> ...  
+> golangci-lint............................................................Passed  
+> Detect secrets...........................................................Passed'  
+> Please enter 'abort', 'retry', or 'bypass':  
 
 Upon entering `bypass` and pressing Enter, you should receive confirmation that the migration completed:
 
-> Please enter 'abort', 'retry', or 'bypass': bypass
-> 2024-03-20 17:50:58 CDT migration       INFO    Adding changes and committing
-> 2024-03-20 17:50:58 CDT migration       INFO    Success!
-> 2024-03-20 17:50:58 CDT migration       INFO    Added migration_target remote for https://github.com/launchbynttdata/tf-azurerm-module_primitive-monitor_diagnostic_setting.git
-> 2024-03-20 17:50:58 CDT migration       INFO    Pushing updated repository to launchbynttdata/tf-azurerm-module_primitive-monitor_diagnostic_setting
-> 2024-03-20 17:50:59 CDT migration       INFO    Success!
-> 2024-03-20 17:50:59 CDT migration       INFO    Setting archived = True for nexient-llc/tf-azurerm-module_primitive-monitor_diagnostic_setting
-> 2024-03-20 17:51:00 CDT migration       INFO    Migration complete! Repo is now available at launchbynttdata/tf-azurerm-module_primitive-monitor_diagnostic_setting
+> Please enter 'abort', 'retry', or 'bypass': bypass  
+> 2024-03-20 17:50:58 CDT migration       INFO    Adding changes and committing  
+> 2024-03-20 17:50:58 CDT migration       INFO    Success!  
+> 2024-03-20 17:50:58 CDT migration       INFO    Added migration_target remote for https://github.com/launchbynttdata/tf-azurerm-module_primitive-monitor_diagnostic_setting.git  
+> 2024-03-20 17:50:58 CDT migration       INFO    Pushing updated repository to launchbynttdata/tf-azurerm-module_primitive-monitor_diagnostic_setting  
+> 2024-03-20 17:50:59 CDT migration       INFO    Success!  
+> 2024-03-20 17:50:59 CDT migration       INFO    Setting archived = True for nexient-llc/tf-azurerm-module_primitive-monitor_diagnostic_setting  
+> 2024-03-20 17:51:00 CDT migration       INFO    Migration complete! Repo is now available at launchbynttdata/tf-azurerm-module_primitive-monitor_diagnostic_setting  
 
 ### Abort and Retry
 
