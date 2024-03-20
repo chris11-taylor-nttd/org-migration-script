@@ -4,6 +4,8 @@ Takes our existing repos and migrates them to the new Launch Public GitHub Organ
 
 ## Prerequisites
 
+TODO: Set up Permissions for Migration group
+
 1. Create a fine-grained PAT following the steps [here](https://github.com/nexient-llc/launch-cli/blob/main/docs/generating-a-token.md) for the `nexient-llc` organization.
 2. Export the PAT to your shell with the following command:
 
@@ -47,6 +49,7 @@ By using this script, you will be effectively performing the following actions:
 - `git add` all files and `git commit` with the message "Migrate repository from old GitHub organization."
 - Add a remote named `migration_target` to the source repository in the `work` directory, pointing at the `launchbynttdata` destination.
 - Push to the `migration_target` remote
+- Archiving the source repository in the `nexient-llc` organization.
 
 ## Migrating a Repository
 
