@@ -4,7 +4,7 @@ Takes our existing repos and migrates them to the new Launch Public GitHub Organ
 
 ## Prerequisites
 
-TODO: Set up Permissions for Migration group
+> NOTE: Even if you previously configured a PAT for use with `launch-cli`, you must follow these steps.
 
 1. Create a fine-grained PAT following the steps [here](https://github.com/nexient-llc/launch-cli/blob/main/docs/generating-a-token.md) for the `nexient-llc` organization.
 2. Export the PAT to your shell with the following command:
