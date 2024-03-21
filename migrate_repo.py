@@ -62,7 +62,7 @@ def read_github_token(token_suffix: str | None = None) -> str:
         return os.environ[env_var_name]
     except KeyError:
         raise RuntimeError(
-            "ERROR: The {env_var_name} environment variable is not set. You must set this environment variable with the contents of your GitHub Personal Access Token (PAT) to use this script."
+            f"ERROR: The {env_var_name} environment variable is not set. You must set this environment variable with the contents of your GitHub Personal Access Token (PAT) to use this script."
         )
 
 
