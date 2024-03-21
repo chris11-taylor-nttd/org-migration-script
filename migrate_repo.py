@@ -49,6 +49,29 @@ REPLACEMENTS = {
     "launch-terragrunt-skeleton": "lcaf-skeleton-terragrunt",
     "lcaf-component-aws-pipelines": "lcaf-component-provider_aws-pipeline_aws",
     "tf-module-resource_name": "tf-launch-module_library-resource_name",
+    "tf-azureado-module_ref-pipeline": "tf-azureado-module_reference-pipeline",
+    # Azure Module Renames
+    "tf-azurerm_module-network_manager_admin_rule_collection": "tf-azurerm-module_primitive-network_manager_admin_rule_collection",
+    "tf-azurerm_module-network_manager_admin_rule": "tf-azurerm-module_primitive-network_manager_admin_rule",
+    "tf-azurerm_module-network_manager_security_admin_configuration": "tf-azurerm-module_primitive-network_manager_security_admin_configuration",
+    "tf-azurerm-collection_module-network_group": "tf-azurerm-module_collection-network_group",
+    "tf-azurerm-collection_module-network_manager": "tf-azurerm-module_collection-network_manager",
+    "tf-azurerm-module_ref-kubernetes_cluster": "tf-azurerm-module_reference-kubernetes_cluster",
+    "tf-azurerm-module-dns_zone_record": "tf-azurerm-module_primitive-dns_zone_record",
+    "tf-azurerm-module-network_interface_security_group_association": "tf-azurerm-module_primitive-network_interface_security_group_association",
+    "tf-azurerm-module-network_interface": "tf-azurerm-module_primitive-network_interface",
+    "tf-azurerm-module-network_security_group": "tf-azurerm-module_primitive-network_security_group",
+    "tf-azurerm-module-network_security_rule": "tf-azurerm-module_primitive-network_security_rule",
+    "tf-azurerm-module-public_ip": "tf-azurerm-module_primitive-public_ip",
+    "tf-azurerm-module-role_assignment": "tf-azurerm-module_primitive-role_assignment",
+    "tf-azurerm-module-subnet_network_security_group_association": "tf-azurerm-module_primitive-subnet_network_security_group_association",
+    "tf-azurerm-module-virtual_machine_extension": "tf-azurerm-module_primitive-virtual_machine_extension",
+    "tf-azurerm-module-windows_virtual_machine": "tf-azurerm-module_primitive-windows_virtual_machine",
+    "tf-azurerm-wrapper_module-application_gateway": "tf-azurerm-module_wrapper-application_gateway",
+    "tf-azurerm-wrapper_module-frontend": "tf-azurerm-module_wrapper-frontend",
+    "tf-azurerm-wrapper_module-kubernetes_cluster": "tf-azurerm-module_wrapper-kubernetes_cluster",
+    "tf-azurerm-wrapper_module-security_group": "tf-azurerm-module_wrapper-security_group",
+    "tf-azurerm-wrapper_module-windows_virtual_machine": "tf-azurerm-module_wrapper-windows_virtual_machine"
 }
 
 REGULAR_EXPRESSIONS = {"go_mod_go_version": re.compile(r"^go \d\.\d+$")}
