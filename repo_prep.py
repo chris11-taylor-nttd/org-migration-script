@@ -100,9 +100,37 @@ def load_repo_map():
 def assign_permissions_to_existing_repos_in_new_organization(
     organization: Organization,
 ):
-    existing_repos = json.loads(
-        pathlib.Path("launchbynttdata-all-repos.json").read_text()
-    )
+    existing_repos = {
+        "lcaf": [
+            "launch-common-automation-framework",
+            "lcaf-component-container",
+            "lcaf-component-platform",
+            "lcaf-component-policy",
+            "lcaf-component-python",
+            "lcaf-component-terragrunt",
+            "lcaf-component-terraform",
+            "lcaf-component-terratest",
+            "lcaf-component-provider_aws-pipeline_aws",
+            "lcaf-component-provider_az-pipeline_azdo",
+            "common-platform-documentation"
+        ],
+        "lcaf_tf": [
+            "lcaf-skeleton-terragrunt",
+            "lcaf-skeleton-terraform"
+        ],
+        "general": [
+            "asdf-regula",
+            "actions-helm-resolve_dependencies",
+            "actions-asdf-install_tools",
+            "actions-helm-inject_chart_version",
+            "actions-helm-test",
+            "git-repo",
+            "magicdust",
+            "dso-zsh",
+            "launch-cli",
+            "git-webhook-lambda"
+        ]
+    }
 
     permission_map = {
         "lcaf": {
