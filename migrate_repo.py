@@ -465,6 +465,12 @@ def main(source_repo_name: str, destination_repo_name: str = None) -> int:
 
     if not destination_repo_name:
         destination_repo_name = source_repo_name
+    
+    source_repo_is_archived = github_source.get_repo(full_name_or_id=f"{SOURCE_ORG}/{source_repo_name}").archived
+
+    if source_repo_is_archived:
+        logger.error(f"{SOURCE_ORG}/{source_repo_name} is marked as Archived and will not be migrated again!")
+        return 1
 
     try:
         source_repo_object = clone_source_repository(
@@ -537,7 +543,7 @@ def main(source_repo_name: str, destination_repo_name: str = None) -> int:
         logger.error("User aborted!")
         return push_main_result
 
-    # archive_repo(g=github_source, org_name=SOURCE_ORG, repo_name=source_repo_name)
+    archive_repo(g=github_source, org_name=SOURCE_ORG, repo_name=source_repo_name)
 
     logger.info(
         f"Migration complete! Repo is now available at {DESTINATION_ORG}/{destination_repo_name}"
