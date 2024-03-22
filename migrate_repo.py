@@ -8,6 +8,7 @@ import re
 import subprocess
 from typing import Callable
 
+from semver import Version
 from github import Auth, Github
 from github.GithubException import UnknownObjectException
 
@@ -71,10 +72,13 @@ REPLACEMENTS = {
     "tf-azurerm-wrapper_module-frontend": "tf-azurerm-module_wrapper-frontend",
     "tf-azurerm-wrapper_module-kubernetes_cluster": "tf-azurerm-module_wrapper-kubernetes_cluster",
     "tf-azurerm-wrapper_module-security_group": "tf-azurerm-module_wrapper-security_group",
-    "tf-azurerm-wrapper_module-windows_virtual_machine": "tf-azurerm-module_wrapper-windows_virtual_machine"
+    "tf-azurerm-wrapper_module-windows_virtual_machine": "tf-azurerm-module_wrapper-windows_virtual_machine",
 }
 
-REGULAR_EXPRESSIONS = {"go_mod_go_version": re.compile(r"^go \d\.\d+$")}
+REGULAR_EXPRESSIONS = {
+    "go_mod_go_version": re.compile(r"^go \d\.\d+$"),
+    "tf_git_reference": re.compile(r"ref=([\w\d\./_-]+)"),
+}
 
 
 def read_github_token(token_suffix: str | None = None) -> str:
@@ -237,6 +241,25 @@ def dynamic_replacements(source_repo: Repo):
                 should_tidy = True
         return should_tidy
 
+    def update_terraform_tag_references(top_level_directory: pathlib.Path):
+        def version_replacer(input: re.Match) -> str:
+            return "ref=1.0.0"
+
+        tf_main_files = discover_files(
+            root_path=top_level_directory, filename_partial="main.tf"
+        )
+        for tf_main_file in tf_main_files:
+            logger.info(
+                f"Discovered main.tf file at {tf_main_file.relative_to(top_level_directory)}, performing version updates."
+            )
+            tf_main_contents = tf_main_file.read_text()
+            new_contents = re.sub(
+                pattern=REGULAR_EXPRESSIONS["tf_git_reference"],
+                repl=version_replacer,
+                string=tf_main_contents,
+            )
+            tf_main_file.write_text(new_contents)
+
     def file_find_replace(
         file_path: pathlib.Path, replacements: dict[str, str]
     ) -> bool:
@@ -300,6 +323,7 @@ def dynamic_replacements(source_repo: Repo):
     )
     updated_go_module = update_go_mod_module_git(top_level_directory=source_repo_path)
     updated_go_version = update_go_mod_go_version(top_level_directory=source_repo_path)
+    update_terraform_tag_references(top_level_directory=source_repo_path)
 
     if updated_go_module or updated_go_version or should_tidy:
         delete_if_present(file_path=source_repo_path.joinpath("go.sum"))
@@ -348,8 +372,29 @@ def add_and_commit(source_repo: Repo, bypass: bool = False, **kwargs):
         source_repo.git.commit("-m", MIGRATION_COMMIT_MESSAGE)
 
 
+def tags_to_semantic_versions(repository: Repo) -> list[Version]:
+    versions = []
+    for tag in repository.tags:
+        try:
+            versions.append(Version.parse(tag.name))
+        except Exception as e:
+            logger.warning(f"Couldn't parse tag {tag} as a semantic version: {e}")
+    return versions
+
+
+def latest_version(versions: list[Version]) -> Version:
+    return max(versions)
+
+
 def push_main_migration(source_repo: Repo, **kwargs) -> None:
     source_repo.git.push(["migration_target", "main", "-f"])
+    existing_tags = tags_to_semantic_versions(repository=source_repo)
+    most_recent_tag = latest_version(existing_tags)
+    new_version = str(most_recent_tag.bump_major())
+    logger.info(f"New tag will be {new_version}")
+    source_repo.git.tag([new_version])
+    source_repo.git.push(["migration_target", new_version])
+    logger.info(f"Pushed tag {new_version} to remote")
 
 
 def block_for_user_input(
@@ -492,7 +537,7 @@ def main(source_repo_name: str, destination_repo_name: str = None) -> int:
         logger.error("User aborted!")
         return push_main_result
 
-    archive_repo(g=github_source, org_name=SOURCE_ORG, repo_name=source_repo_name)
+    # archive_repo(g=github_source, org_name=SOURCE_ORG, repo_name=source_repo_name)
 
     logger.info(
         f"Migration complete! Repo is now available at {DESTINATION_ORG}/{destination_repo_name}"
