@@ -339,13 +339,16 @@ def dynamic_replacements(source_repo: Repo):
 
     if updated_go_module or updated_go_version or should_tidy:
         delete_if_present(file_path=source_repo_path.joinpath("go.sum"))
-        _ = block_for_user_input_with_bypass(
+        go_mod_tidy_result = block_for_user_input_with_bypass(
             message="Executing `go mod tidy`",
             retry_function=shell_command,
             command=["go", "mod", "tidy"],
             source_repo=source_repo,
             raise_on_failure=True,
         )
+        if go_mod_tidy_result == -999:
+            logger.error("User aborted!")
+            raise RuntimeError(f"User aborted!")
 
 
 def shell_command(
