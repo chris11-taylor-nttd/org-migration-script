@@ -51,6 +51,7 @@ REPLACEMENTS = {
     "launch-terragrunt-skeleton": "lcaf-skeleton-terragrunt",
     "lcaf-component-aws-pipelines": "lcaf-component-provider_aws-pipeline_aws",
     "tf-module-resource_name": "tf-launch-module_library-resource_name",
+    "tf-azurerm-module-resource_group": "tf-azurerm-module_primitive-resource_group",
     "tf-azureado-module_ref-pipeline": "tf-azureado-module_reference-pipeline",
     # Azure Module Renames
     "tf-azurerm_module-network_manager_admin_rule_collection": "tf-azurerm-module_primitive-network_manager_admin_rule_collection",
@@ -74,6 +75,9 @@ REPLACEMENTS = {
     "tf-azurerm-wrapper_module-kubernetes_cluster": "tf-azurerm-module_collection-kubernetes_cluster",
     "tf-azurerm-wrapper_module-security_group": "tf-azurerm-module_collection-security_group",
     "tf-azurerm-wrapper_module-windows_virtual_machine": "tf-azurerm-module_collection-windows_virtual_machine",
+    "tf-caf-terratest-common": "lcaf-component-terratest",
+    "caf-component-terratest-common": "caf-component-terratest",
+    "v0.0.0-20230828171431-63fb3d474745": "v1.0.3"
 }
 
 REGULAR_EXPRESSIONS = {
@@ -394,7 +398,10 @@ def latest_version(versions: list[Version]) -> Version:
 def push_main_migration(source_repo: Repo, **kwargs) -> None:
     source_repo.git.push(["migration_target", "main", "-f"])
     existing_tags = tags_to_semantic_versions(repository=source_repo)
-    most_recent_tag = latest_version(existing_tags)
+    if existing_tags:
+        most_recent_tag = latest_version(existing_tags)
+    else:
+        most_recent_tag = Version(0,0,0)
     new_version = str(most_recent_tag.bump_major())
     logger.info(f"New tag will be {new_version}")
     source_repo.git.tag([new_version])
