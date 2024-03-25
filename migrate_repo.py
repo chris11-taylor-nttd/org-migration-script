@@ -498,6 +498,12 @@ def main(source_repo_name: str, destination_repo_name: str = None) -> int:
         f"Migrating {SOURCE_ORG}/{source_repo_name} to {DESTINATION_ORG}/{destination_repo_name}"
     )
 
+    try:
+        static_replacements(source_repo=source_repo_object)
+    except:
+        logger.exception("Failed to perform static replacements on your repo!")
+        return -4
+
     make_configure_result = block_for_user_input(
         message="Executing `make configure`",
         retry_function=shell_command,
@@ -509,12 +515,6 @@ def main(source_repo_name: str, destination_repo_name: str = None) -> int:
     if make_configure_result == -999:
         logger.error("User aborted!")
         return make_configure_result
-
-    try:
-        static_replacements(source_repo=source_repo_object)
-    except:
-        logger.exception("Failed to perform static replacements on your repo!")
-        return -4
 
     try:
         dynamic_replacements(source_repo=source_repo_object)
