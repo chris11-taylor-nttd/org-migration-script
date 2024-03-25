@@ -372,9 +372,9 @@ def add_remote(source_repo: Repo, destination_repo_name: str) -> None:
 def add_and_commit(source_repo: Repo, bypass: bool = False, **kwargs):
     source_repo.git.add(all=True)
     if bypass:
-        source_repo.git.commit("-m", MIGRATION_COMMIT_MESSAGE, "--no-verify")
+        source_repo.git.commit("-m", f"'{MIGRATION_COMMIT_MESSAGE}'", "--no-verify")
     else:
-        source_repo.git.commit("-m", MIGRATION_COMMIT_MESSAGE)
+        source_repo.git.commit("-m", f"'{MIGRATION_COMMIT_MESSAGE}'")
 
 
 def tags_to_semantic_versions(repository: Repo) -> list[Version]:
