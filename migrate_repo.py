@@ -78,7 +78,8 @@ REPLACEMENTS = {
     "tf-caf-terratest-common": "lcaf-component-terratest",
     "caf-component-terratest-common": "caf-component-terratest",
     "v0.0.0-20230828171431-63fb3d474745": "v1.0.3",
-    "caf-component-terratest v1.0.1": "caf-component-terratest v1.0.3"
+    "caf-component-terratest v1.0.1": "caf-component-terratest v1.0.3",
+    "caf-component-terratest v1.0.2": "caf-component-terratest v1.0.3"
 }
 
 REGULAR_EXPRESSIONS = {
