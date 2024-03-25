@@ -262,13 +262,22 @@ def initiate_migration(old_organization: Organization, new_organization: Organiz
 
 def migration_status(old_organization: Organization, new_organization: Organization):
     repo_map = load_repo_map()
+    migrated_repo_names = set([])
     for old_repo_name, new_repo_name in repo_map.items():
+        old_repo = old_organization.get_repo(old_repo_name)
+        new_repo = new_organization.get_repo(new_repo_name)
         print(
             wide_display(
-                old_repo=old_organization.get_repo(old_repo_name),
-                new_repo=new_organization.get_repo(new_repo_name),
+                old_repo=old_repo,
+                new_repo=new_repo,
             )
         )
+        if len([b for b in new_repo.get_branches()]):
+            migrated_repo_names.add(new_repo.name)
+            migrated_repo_names.add(old_repo.name)
+    
+    print("MIGRATED: ")
+    print("\n".join(migrated_repo_names))
 
 
 def wide_display(old_repo: Repository, new_repo: Repository):
