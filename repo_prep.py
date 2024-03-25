@@ -215,7 +215,14 @@ def create_migration_targets(organization: Organization):
         ): GithubPermission.ADMIN,
     }
     for new_repo in repo_map.values():
-        created_repo = create_repo(organization=organization, repo_name=new_repo)
+        try:
+            created_repo = create_repo(organization=organization, repo_name=new_repo)
+        except Exception as e:
+            logger.warning(f"Failed to create_repo: {e}, trying to use existing")
+            try:
+                created_repo = organization.get_repo(name=new_repo)
+            except Exception as e:
+                logger.critical(f"Failed to handle {e}")
         for team, permission in permission_map.items():
             configure_repo_permissions(
                 repository=created_repo, team=team, permission=permission
@@ -233,7 +240,6 @@ def get_existing_repositories(
             logger.warning(
                 f"Repository '{repo_name}' didn't exist within {organization}"
             )
-
     return found_repos
 
 
