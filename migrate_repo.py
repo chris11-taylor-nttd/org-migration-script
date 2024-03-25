@@ -222,6 +222,7 @@ def static_replacements(source_repo: Repo):
 
     replace_static(".gitignore")
     replace_static(".lcafenv")
+    replace_static(".secrets.baseline")
     replace_static(".tool-versions")
     replace_static("CODEOWNERS")
     replace_static("Makefile")
