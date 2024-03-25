@@ -7,6 +7,7 @@ import shutil
 import re
 import subprocess
 from typing import Callable
+import json
 
 from semver import Version
 from github import Auth, Github
@@ -127,6 +128,10 @@ def clone_source_repository(source_repo_name: str, work_dir: pathlib.Path) -> Re
 
 def source_repo_object(source_repo_path: pathlib.Path) -> Repo:
     return Repo(path=source_repo_path)
+
+
+def load_repo_rename_map():
+    return json.loads(pathlib.Path("nexient-llc-azure-repos-map.json").read_text())
 
 
 def destination_repo_exists_remotely(g: Github, destination_repo: str) -> None:
@@ -464,7 +469,11 @@ def main(source_repo_name: str, destination_repo_name: str = None) -> int:
         return -1
 
     if not destination_repo_name:
-        destination_repo_name = source_repo_name
+        repo_rename_map = load_repo_rename_map()
+        if source_repo_name in repo_rename_map:
+            destination_repo_name = repo_rename_map[source_repo_name]
+        else:
+            destination_repo_name = source_repo_name
     
     source_repo_is_archived = github_source.get_repo(full_name_or_id=f"{SOURCE_ORG}/{source_repo_name}").archived
 
