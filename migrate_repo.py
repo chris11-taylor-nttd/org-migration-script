@@ -349,10 +349,14 @@ def dynamic_replacements(source_repo: Repo):
 
 
 def shell_command(
-    source_repo: Repo, command: list[str], raise_on_failure: bool = False
+    source_repo: Repo, command: list[str], raise_on_failure: bool = False, bypass: bool = False
 ) -> int:
     repo_root = pathlib.Path(source_repo.working_dir)
+    
     command_display = " ".join(command)
+    if bypass:
+        logger.debug(f"Bypassing {command_display}")
+        return 0
     logger.info(f"About to run {command_display} in {repo_root}...")
     outcome = subprocess.run(
         command, cwd=repo_root, stdout=subprocess.PIPE, stderr=subprocess.PIPE
