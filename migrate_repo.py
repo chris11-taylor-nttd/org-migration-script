@@ -69,11 +69,11 @@ REPLACEMENTS = {
     "tf-azurerm-module-subnet_network_security_group_association": "tf-azurerm-module_primitive-subnet_network_security_group_association",
     "tf-azurerm-module-virtual_machine_extension": "tf-azurerm-module_primitive-virtual_machine_extension",
     "tf-azurerm-module-windows_virtual_machine": "tf-azurerm-module_primitive-windows_virtual_machine",
-    "tf-azurerm-wrapper_module-application_gateway": "tf-azurerm-module_wrapper-application_gateway",
-    "tf-azurerm-wrapper_module-frontend": "tf-azurerm-module_wrapper-frontend",
-    "tf-azurerm-wrapper_module-kubernetes_cluster": "tf-azurerm-module_wrapper-kubernetes_cluster",
-    "tf-azurerm-wrapper_module-security_group": "tf-azurerm-module_wrapper-security_group",
-    "tf-azurerm-wrapper_module-windows_virtual_machine": "tf-azurerm-module_wrapper-windows_virtual_machine",
+    "tf-azurerm-wrapper_module-application_gateway": "tf-azurerm-module_collection-application_gateway",
+    "tf-azurerm-wrapper_module-frontend": "tf-azurerm-module_collection-frontend",
+    "tf-azurerm-wrapper_module-kubernetes_cluster": "tf-azurerm-module_collection-kubernetes_cluster",
+    "tf-azurerm-wrapper_module-security_group": "tf-azurerm-module_collection-security_group",
+    "tf-azurerm-wrapper_module-windows_virtual_machine": "tf-azurerm-module_collection-windows_virtual_machine",
 }
 
 REGULAR_EXPRESSIONS = {
