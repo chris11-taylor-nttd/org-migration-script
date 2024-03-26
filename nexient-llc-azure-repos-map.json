@@ -6,7 +6,7 @@
   "tf-azurerm_module-network_manager_security_admin_configuration": "tf-azurerm-module_primitive-network_manager_security_admin_configuration",
   "tf-azurerm-collection_module-network_group": "tf-azurerm-module_collection-network_group",
   "tf-azurerm-collection_module-network_manager": "tf-azurerm-module_collection-network_manager",
-  "tf-azurerm-module_collection-connect_hub_spoke": "tf-azurerm-module_collection-connect_hub_spoke",
+  "tf-azurerm-module_collection-connect_hub_spoke": "tf-azurerm-module_collection-peer_virtual_networks",
   "tf-azurerm-module_collection-hub_network": "tf-azurerm-module_collection-hub_network",
   "tf-azurerm-module_collection-hubspoke_monitor": "tf-azurerm-module_collection-hubspoke_monitor",
   "tf-azurerm-module_collection-spoke_network": "tf-azurerm-module_collection-spoke_network",
