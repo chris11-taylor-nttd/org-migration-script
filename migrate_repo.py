@@ -79,7 +79,8 @@ REPLACEMENTS = {
     "caf-component-terratest-common": "caf-component-terratest",
     "v0.0.0-20230828171431-63fb3d474745": "v1.0.3",
     "caf-component-terratest v1.0.1": "caf-component-terratest v1.0.3",
-    "caf-component-terratest v1.0.2": "caf-component-terratest v1.0.3"
+    "caf-component-terratest v1.0.2": "caf-component-terratest v1.0.3",
+    "tf-azurerm-module-key_vault": "tf-azurerm-module_primitive-key_vault"
 }
 
 REGULAR_EXPRESSIONS = {
@@ -120,8 +121,10 @@ def create_work_dir(root_path: pathlib.Path = pathlib.Path.cwd()) -> pathlib.Pat
     return work_dir
 
 
-def clone_source_repository(source_repo_name: str, work_dir: pathlib.Path) -> Repo:
-    source_repo_url = f"https://github.com/{SOURCE_ORG}/{source_repo_name}.git"
+def clone_source_repository(source_repo_name: str, work_dir: pathlib.Path, source_org: str|None = None) -> Repo:
+    if not source_org: 
+        source_org = SOURCE_ORG
+    source_repo_url = f"https://github.com/{source_org}/{source_repo_name}.git"
     source_repo_path = work_dir.joinpath(source_repo_name)
     if source_repo_path.exists():
         logger.error(
@@ -442,6 +445,7 @@ def block_for_user_input(
             user_choice = input("Please enter 'abort' or 'retry': ").lower().strip()
 
         if user_choice == "abort":
+            logger.error("User aborted!")
             return -999
         return block_for_user_input(
             message=message, retry_function=retry_function, *args, **kwargs
