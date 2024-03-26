@@ -393,14 +393,14 @@ def add_remote(source_repo: Repo, destination_repo_name: str) -> None:
         logger.info(f"Added migration_target remote for {destination_repo_url}")
 
 
-def add_and_commit(source_repo: Repo, message: str | None = None, bypass: bool = False, **kwargs):
-    if not message:
-        message = MIGRATION_COMMIT_MESSAGE
+def add_and_commit(source_repo: Repo, commit_message: str | None = None, bypass: bool = False, **kwargs):
+    if not commit_message:
+        commit_message = MIGRATION_COMMIT_MESSAGE
     source_repo.git.add(all=True)
     if bypass:
-        source_repo.git.commit("-m", f"'{message}'", "--no-verify")
+        source_repo.git.commit("-m", f"'{commit_message}'", "--no-verify")
     else:
-        source_repo.git.commit("-m", f"'{message}'")
+        source_repo.git.commit("-m", f"'{commit_message}'")
 
 
 def tags_to_semantic_versions(repository: Repo) -> list[Version]:
