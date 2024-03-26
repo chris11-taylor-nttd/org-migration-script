@@ -124,14 +124,15 @@ def create_work_dir(root_path: pathlib.Path = pathlib.Path.cwd()) -> pathlib.Pat
 def clone_source_repository(source_repo_name: str, work_dir: pathlib.Path, source_org: str|None = None) -> Repo:
     if not source_org: 
         source_org = SOURCE_ORG
-    source_repo_url = f"https://github.com/{source_org}/{source_repo_name}.git"
+    token = read_github_token(source_org)
+    source_repo_url = f"https://{token}:x-oauth-basic@github.com/{source_org}/{source_repo_name}.git"
     source_repo_path = work_dir.joinpath(source_repo_name)
     if source_repo_path.exists():
         logger.error(
             f"Path {source_repo_path} already exists, deleting prior to clone!"
         )
         shutil.rmtree(path=source_repo_path)
-    logger.info(f"Cloning {source_repo_url} to {source_repo_path}")
+    logger.info(f"Cloning https://github.com/{source_org}/{source_repo_name}.git to {source_repo_path}")
     return Repo.clone_from(url=source_repo_url, to_path=source_repo_path)
 
 
