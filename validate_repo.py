@@ -24,17 +24,22 @@ def go_mod_terratest_fix(repo: Repo):
     
     go_mod_contents_fixed = go_mod_contents.replace(
         "github.com/launchbynttdata/lcaf-component-terratest v1.0.0",
-        "github.com/launchbynttdata/lcaf-component-terratest v1.0.3"
+        "github.com/launchbynttdata/lcaf-component-terratest v1.0.4"
     )
 
     go_mod_contents_fixed = go_mod_contents_fixed.replace(
         "github.com/launchbynttdata/lcaf-component-terratest v1.0.1",
-        "github.com/launchbynttdata/lcaf-component-terratest v1.0.3"
+        "github.com/launchbynttdata/lcaf-component-terratest v1.0.4"
     )
 
     go_mod_contents_fixed = go_mod_contents_fixed.replace(
         "github.com/launchbynttdata/lcaf-component-terratest v1.0.2",
-        "github.com/launchbynttdata/lcaf-component-terratest v1.0.3"
+        "github.com/launchbynttdata/lcaf-component-terratest v1.0.4"
+    )
+
+    go_mod_contents_fixed = go_mod_contents_fixed.replace(
+        "github.com/launchbynttdata/lcaf-component-terratest v1.0.3",
+        "github.com/launchbynttdata/lcaf-component-terratest v1.0.4"
     )
 
     if go_mod_contents != go_mod_contents_fixed:
