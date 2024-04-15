@@ -110,9 +110,10 @@ def main(filter_repos_to: list[str] | None = None) -> None:
             print(f"{repo.name},{repo.html_url},{results[0]},{results[1]},{results[2]}")
 
 if __name__ == "__main__":
-    repo_name_list = [
-        "tf-azurerm-module_collection-hubspoke_monitor",
-        "tf-azurerm-module_primitive-network_interface_security_group_association",
-        "tf-azurerm-module_primitive-public_ip"
-    ]
-    main(filter_repos_to=repo_name_list)
+    # repo_name_list = [
+    #     "tf-azurerm-module_collection-hubspoke_monitor",
+    #     "tf-azurerm-module_primitive-network_interface_security_group_association",
+    #     "tf-azurerm-module_primitive-public_ip"
+    # ]
+    # main(filter_repos_to=repo_name_list)
+    main()
