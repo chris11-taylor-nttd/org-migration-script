@@ -264,6 +264,13 @@ def static_replacements(source_repo: Repo):
     template_path = pathlib.Path.cwd().joinpath("templates")
     destination_path = pathlib.Path(source_repo.working_dir)
 
+    def install_workflows():
+        workflow_path_relative = ".github/workflows"
+        template_workflow_path = template_path.joinpath(workflow_path_relative)
+        repo_workflow_path = destination_path.joinpath(workflow_path_relative)
+        repo_workflow_path.mkdir(parents=True, exist_ok=True)
+        shutil.copytree(src=template_workflow_path, dst=repo_workflow_path)
+
     def replace_static(filename: str):
         src = template_path.joinpath(filename)
         dst = destination_path.joinpath(filename)
@@ -284,6 +291,8 @@ def static_replacements(source_repo: Repo):
     delete_if_present(file_path=destination_path.joinpath("test.tfvars"))
     delete_if_present(file_path=destination_path.joinpath("example.tfvars"))
     delete_if_present(file_path=destination_path.joinpath("tests/test.tfvars"))
+
+    install_workflows()
 
 
 def dynamic_replacements(source_repo: Repo):
