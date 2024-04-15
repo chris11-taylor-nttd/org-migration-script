@@ -80,7 +80,55 @@ REPLACEMENTS = {
     "v0.0.0-20230828171431-63fb3d474745": "v1.0.3",
     "caf-component-terratest v1.0.1": "caf-component-terratest v1.0.3",
     "caf-component-terratest v1.0.2": "caf-component-terratest v1.0.3",
-    "tf-azurerm-module-key_vault": "tf-azurerm-module_primitive-key_vault"
+    "tf-azurerm-module-key_vault": "tf-azurerm-module_primitive-key_vault",
+    # AWS Module Renames
+    "tf-aws-wrapper_module-s3_bucket": "tf-aws-module_collection-s3_bucket",
+    "tf-aws-wrapper_module-codebuild": "tf-aws-module_collection-codebuild",
+    "tf-aws-module-acm_private_cert": "tf-aws-module_primitive-acm_private_cert",
+    "tf-aws-module-appmesh": "tf-aws-module_primitive-appmesh",
+    "tf-aws-module-appmesh_gateway_route": "tf-aws-module_primitive-appmesh_gateway_route",
+    "tf-aws-module-appmesh_route": "tf-aws-module_primitive-appmesh_route",
+    "tf-aws-module-appmesh_virtual_gateway": "tf-aws-module_primitive-virtual_gateway",
+    "tf-aws-module-appmesh_virtual_node": "tf-aws-module_primitive-virtual_node",
+    "tf-aws-module-appmesh_virtual_router": "tf-aws-module_primitive-virtual_router",
+    "tf-aws-module-appmesh_virtual_service": "tf-aws-module_primitive-virtual_service",
+    "tf-aws-module-autoscaling_policy": "tf-aws-module_primitive-autoscaling_policy",
+    "tf-aws-module-autoscaling_target": "tf-aws-module_primitive-autoscaling_target",
+    "tf-aws-module-cloudwatch_log_stream": "tf-aws-module_primitive-cloudwatch_log_stream",
+    "tf-aws-module-cloudwatch_log_group": "tf-aws-module_primitive-cloudwatch_log_group",
+    "tf-aws-module-cloudwatch_log_subscription_filter": "tf-aws-module_primitive-cloudwatch_subscription_filter",
+    "tf-aws-module-cloudwatch_metric_stream": "tf-aws-module_primitive-cloudwatch_metric_stream",
+    "tf-aws-module-codeartifact_domain": "tf-aws-module_primitive-codeartifact_domain",
+    "tf-aws-module-codeartifact_repository": "tf-aws-module_primitive-codeartifact_repository",
+    "tf-aws-module-codepipeline": "tf-aws-module_primitive-codepipeline",
+    "tf-aws-module-firehose_delivery_stream": "tf-aws-module_primitive-firehose_delivery_stream",
+    "tf-aws-module-private_ca": "tf-aws-module_primitive-private_ca",
+    "tf-aws-module-private_dns_namespace": "tf-aws-module_primitive-private_dns_namespace",
+    "tf-aws-module-service_discovery_service": "tf-aws-module_primitive-service_discovery_service",
+    "tf-aws-module-ssm_parameter": "tf-aws-module_primitive-ssm_parameter",
+    "tf-aws-module-wafv2_web_acl_association": "tf-aws-module_primitive-wafv2_web_acl_association",
+    "tf-aws-wrapper_module-bulk_lambda_function": "tf-aws-module_collection-bulk_lambda_function",
+    "tf-aws-wrapper_module-cloudwatch_logs": "tf-aws-module_collection-cloudwatch_logs",
+    "tf-aws-wrapper_module-codepipelines": "tf-aws-module_collection-codepipeline",
+    "tf-aws-module_primitive-dns_record": "tf-aws-module_primitive-dns_record",
+    "tf-aws-module_primitive-dns_zone": "tf-aws-module_primitive-dns_zone",
+    "tf-aws-wrapper_module-ecs_appmesh_app": "tf-aws-module_collection-ecs_appmesh_app",
+    "tf-aws-wrapper_module-ecs_appmesh_ingress": "tf-aws-module_collection-ecs_appmesh_ingress",
+    "tf-aws-wrapper_module-ecs_appmesh_platform": "tf-aws-module_collection-ecs_appmesh_platform",
+    "tf-aws-wrapper_module-ecs_platform": "tf-aws-module_collection-ecs_platform",
+    "tf-aws-wrapper_module-iam_assumable_role": "tf-aws-module_collection-iam_assumable_role",
+    "tf-aws-wrapper_module-iam_policy": "tf-aws-module_collection-iam_policy",
+    "tf-aws-wrapper_module-lambda_function": "tf-aws-module_collection-lambda_function",
+    "tf-aws-wrapper_module-load_balancer": "tf-aws-module_collection-load_balancer",
+    "tf-aws-wrapper_module-memcached_cluster": "tf-aws-module_collection-memcached_cluster",
+    "tf-aws-wrapper_module-sns": "tf-aws-module_collection-sns",
+    "tf-aws-wrapper_module-sumo_telemetry_shipper": "tf-aws-module_collection-sumo_telemetry_shipper",
+    "tf-aws-wrapper_module-sumologic_observability": "tf-aws-module_reference-sumologic_observability",
+    "tf-aws-wrapper_module-activemq_broker": "tf-aws-module_collection-activemq_broker",
+    "tf-aws-wrapper_module-ecs_app": "tf-aws-module_collection-ecs_app",
+    "tf-aws-wrapper_module-remote_dev_instance": "tf-aws-module_collection-remote_dev_instance",
+    "tf-aws-wrapper_module-lambda_layer": "tf-aws-module_collection-lambda_layer",
+    "tf-aws-wrapper_module-lambda_application": "tf-aws-module_collection-lambda_application"
 }
 
 REGULAR_EXPRESSIONS = {
@@ -141,7 +189,7 @@ def source_repo_object(source_repo_path: pathlib.Path) -> Repo:
 
 
 def load_repo_rename_map():
-    return json.loads(pathlib.Path("nexient-llc-azure-repos-map.json").read_text())
+    return json.loads(pathlib.Path("nexient-llc-repos-rename-map.json").read_text())
 
 
 def destination_repo_exists_remotely(g: Github, destination_repo: str) -> None:

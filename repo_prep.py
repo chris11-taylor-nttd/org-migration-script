@@ -94,8 +94,9 @@ def get_repositories(
 
 
 def load_repo_map():
-    return json.loads(pathlib.Path("nexient-llc-azure-repos-map.json").read_text())
-
+    # return json.loads(pathlib.Path("nexient-llc-repos-rename-map.json").read_text())
+    rename_map: dict[str, str] = json.loads(pathlib.Path("nexient-llc-repos-rename-map.json").read_text())
+    return {k: v for k, v in rename_map.items() if k.startswith("tf-az")}
 
 def assign_permissions_to_existing_repos_in_new_organization(
     organization: Organization,
