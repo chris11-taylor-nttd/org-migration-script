@@ -268,7 +268,6 @@ def static_replacements(source_repo: Repo):
         workflow_path_relative = ".github/workflows"
         template_workflow_path = template_path.joinpath(workflow_path_relative)
         repo_workflow_path = destination_path.joinpath(workflow_path_relative)
-        repo_workflow_path.mkdir(parents=True, exist_ok=True)
         shutil.copytree(src=template_workflow_path, dst=repo_workflow_path)
 
     def replace_static(filename: str):
