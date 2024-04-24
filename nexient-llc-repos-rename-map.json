@@ -95,6 +95,6 @@
   "tf-aws-wrapper_module-activemq_broker": "tf-aws-module_collection-activemq_broker",
   "tf-aws-wrapper_module-ecs_app": "tf-aws-module_collection-ecs_app",
   "tf-aws-wrapper_module-remote_dev_instance": "tf-aws-module_collection-remote_dev_instance",
-  "tf-aws-wrapper_module-lambda_layer": "tf-aws-module_collection-lambda_layer",
+  "tf-aws-wrapper_module-lambda_layer": "tf-aws-module_primitive-lambda_layer",
   "tf-aws-wrapper_module-lambda_application": "tf-aws-module_collection-lambda_application"
 }
