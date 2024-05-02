@@ -188,7 +188,7 @@ def source_repo_object(source_repo_path: pathlib.Path) -> Repo:
     return Repo(path=source_repo_path)
 
 
-def load_repo_rename_map():
+def load_repo_rename_map() -> dict[str, str]:
     return json.loads(pathlib.Path("nexient-llc-repos-rename-map.json").read_text())
 
 
