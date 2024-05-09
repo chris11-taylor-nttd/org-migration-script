@@ -77,9 +77,10 @@ REPLACEMENTS = {
     "tf-azurerm-wrapper_module-windows_virtual_machine": "tf-azurerm-module_collection-windows_virtual_machine",
     "tf-caf-terratest-common": "lcaf-component-terratest",
     "caf-component-terratest-common": "caf-component-terratest",
-    "v0.0.0-20230828171431-63fb3d474745": "v1.0.3",
-    "caf-component-terratest v1.0.1": "caf-component-terratest v1.0.3",
-    "caf-component-terratest v1.0.2": "caf-component-terratest v1.0.3",
+    "v0.0.0-20230828171431-63fb3d474745": "v1.0.4",
+    "v0.0.0-20240117163707-a1dfafae58b4": "v1.0.4",
+    "caf-component-terratest v1.0.1": "caf-component-terratest v1.0.4",
+    "caf-component-terratest v1.0.2": "caf-component-terratest v1.0.4",
     "tf-azurerm-module-key_vault": "tf-azurerm-module_primitive-key_vault",
     # AWS Module Renames
     "tf-aws-wrapper_module-s3_bucket": "tf-aws-module_collection-s3_bucket",
