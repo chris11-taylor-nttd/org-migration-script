@@ -3,12 +3,9 @@ import pathlib
 import sys
 import logging
 import os
-import itertools
 import shutil
-import re
-import subprocess
-from typing import Callable
-import json
+
+from migrate_repo import discover_files
 
 from semver import Version
 from github import Auth, Github
@@ -25,7 +22,7 @@ logging.basicConfig(
     format="%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s",
     datefmt="%F %T %Z",
 )
-logger = logging.getLogger("tag_bumper")
+logger = logging.getLogger("workflow_installer")
 logging.getLogger("git").setLevel(logging.INFO)
 logging.getLogger("urllib3").setLevel(logging.INFO)
 
@@ -122,26 +119,27 @@ def move_tag_forward(repo: Repo, tag_name: str) -> None:
     repo.git.tag(tag_name)
     repo.git.push("origin", tag_name, "-f")
 
-def install_workflow(repo: Repo) -> bool:
+
+def install_workflow(repo: Repo, workflow_filename: str) -> bool:
     repo_root = pathlib.Path(repo.working_dir)
     workflow_path_relative = ".github/workflows"
     repo_root.joinpath(workflow_path_relative).mkdir(exist_ok=True, parents=True)
     workflow_dir = repo_root.joinpath(workflow_path_relative)
-    if workflow_dir.joinpath("lint-terraform.yaml").exists():
+    if workflow_dir.joinpath(workflow_filename).exists():
         return False
-    shutil.copy(src=TEMPLATES_ROOT.joinpath(workflow_path_relative).joinpath("lint-terraform.yaml"), dst=workflow_dir.joinpath("lint-terraform.yaml"))
+    shutil.copy(src=TEMPLATES_ROOT.joinpath(workflow_path_relative).joinpath(workflow_filename), dst=workflow_dir.joinpath(workflow_filename))
     return True
 
 
 def add_commit_retag_push(repo: Repo, latest_tag_name: str):
     repo.git.add(all=True)
-    repo.git.commit("-m", "Automation: add lint-terraform workflow")
+    repo.git.commit("-m", "Automation: install workflow")
     repo.git.tag("-d", latest_tag_name)
     repo.git.tag(latest_tag_name)
     repo.git.push("origin", "main", "-f")
     repo.git.push("origin", latest_tag_name, "-f")
 
-def main() -> int:
+def main(repo_name_prefix: str = "tf-") -> int:
     work_dir = create_work_dir()
 
     try:
@@ -151,10 +149,23 @@ def main() -> int:
         return -1
     
     try:
-        all_repositories = get_org_repositories(organization=github_object.get_organization(login=ORG), name_filter="tf-")
+        all_repositories = get_org_repositories(organization=github_object.get_organization(login=ORG), name_filter=repo_name_prefix)
     except Exception as e:
         logger.exception("Failed to retrieve Github Repositories!")
         return -2 
+
+    all_workflows = discover_files(root_path=work_dir.parent.joinpath("templates/.github/workflows"), filename_partial=".yaml")
+
+    logger.info(f"Discovered {len(all_repositories)} repositor{'ies' if len(all_repositories) > 1 else 'y'} that contains '{repo_name_prefix}'.")
+
+    logger.info(f"Discovered {len(all_workflows)} workflows: {[workflow.name for workflow in all_workflows]}")
+    
+    user_choice = None
+    while str(user_choice).lower().strip() not in ["y", "n"]:
+        user_choice = input("Apply workflows to repositories? [y/n]: ").lower().strip()
+        if user_choice == "n":
+            logger.error("Aborted!")
+            return 1   
 
     outcomes = []
     for repository in all_repositories:
@@ -167,13 +178,22 @@ def main() -> int:
                 continue
 
             latest_tag = latest_version(tags_to_semantic_versions(source_repo_object))
-            if install_workflow(repo=source_repo_object):
+            installation_outcomes = []
+            for workflow in all_workflows:
+                installation_outcomes.append(install_workflow(repo=source_repo_object, workflow_filename=workflow.name))
+            if any([o for o in installation_outcomes]):
+                logger.info(f"At least one workflow was installed for {repository.name}")
                 add_commit_retag_push(repo=source_repo_object, latest_tag_name=str(latest_tag))
+                logger.info(f"Pushed updates to {repository.html_url}")
+            else:
+                logger.info(f"No action required for {repository.name}")
         except Exception as e:
             outcomes.append(f"EXCEPTION for {repository.name}: {e}")
-
     print("\n".join(outcomes))
 
 if __name__ == "__main__":
-    result = main()
+    try:
+        result = main(sys.argv[1])
+    except IndexError:
+        result = main()
     exit(code=result)
