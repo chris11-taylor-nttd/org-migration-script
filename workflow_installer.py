@@ -4,6 +4,7 @@ import sys
 import logging
 import os
 import shutil
+import hashlib
 
 from migrate_repo import discover_files
 
@@ -11,10 +12,8 @@ from semver import Version
 from github import Auth, Github
 from github.Repository import Repository
 from github.Organization import Organization
-from github.GithubException import UnknownObjectException
 
 from git.repo import Repo
-from git.remote import Remote
 from git import Commit
 
 logging.basicConfig(
@@ -39,6 +38,21 @@ DISCOVERY_FORBIDDEN_DIRECTORIES = [
 ORG = "launchbynttdata"
 
 TEMPLATES_ROOT = pathlib.Path.cwd().joinpath("templates")
+
+WORKFLOW_FILE_HASHES = {}
+
+def populate_workflow_hashes(): 
+    for workflow_file in discover_files(root_path=TEMPLATES_ROOT.joinpath(".github/workflows"), filename_partial=".yaml"):
+        WORKFLOW_FILE_HASHES[workflow_file.name] = get_hash(path=workflow_file)
+
+
+def get_hash(path: pathlib.Path) -> str:
+    with open(path, "rb") as f:
+        hash = hashlib.blake2b()
+        while chunk := f.read(8192):
+            hash.update(chunk)
+    return hash.hexdigest()
+
 
 def read_github_token(token_suffix: str | None = None) -> str:
     env_var_name = "GITHUB_TOKEN"
@@ -126,7 +140,12 @@ def install_workflow(repo: Repo, workflow_filename: str) -> bool:
     repo_root.joinpath(workflow_path_relative).mkdir(exist_ok=True, parents=True)
     workflow_dir = repo_root.joinpath(workflow_path_relative)
     if workflow_dir.joinpath(workflow_filename).exists():
-        return False
+        repo_hash = get_hash(workflow_dir.joinpath(workflow_filename))
+        if repo_hash != WORKFLOW_FILE_HASHES[workflow_filename]:
+            shutil.copy(src=TEMPLATES_ROOT.joinpath(workflow_path_relative).joinpath(workflow_filename), dst=workflow_dir.joinpath(workflow_filename))
+            return True
+        else:
+            return False
     shutil.copy(src=TEMPLATES_ROOT.joinpath(workflow_path_relative).joinpath(workflow_filename), dst=workflow_dir.joinpath(workflow_filename))
     return True
 
@@ -141,6 +160,7 @@ def add_commit_retag_push(repo: Repo, latest_tag_name: str):
 
 def main(repo_name_prefix: str = "tf-") -> int:
     work_dir = create_work_dir()
+    populate_workflow_hashes()
 
     try:
         github_object = get_github_instance(token_suffix=ORG)
@@ -182,7 +202,7 @@ def main(repo_name_prefix: str = "tf-") -> int:
             for workflow in all_workflows:
                 installation_outcomes.append(install_workflow(repo=source_repo_object, workflow_filename=workflow.name))
             if any([o for o in installation_outcomes]):
-                logger.info(f"At least one workflow was installed for {repository.name}")
+                logger.info(f"At least one workflow was installed or updated for {repository.name}")
                 add_commit_retag_push(repo=source_repo_object, latest_tag_name=str(latest_tag))
                 logger.info(f"Pushed updates to {repository.html_url}")
             else:
