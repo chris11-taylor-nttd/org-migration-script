@@ -13,7 +13,7 @@ logging.basicConfig(
     format="%(asctime)s\t%(name)s\t%(levelname)s\t%(message)s",
     datefmt="%F %T %Z",
 )
-logger = logging.getLogger("workflow_installer")
+logger = logging.getLogger("permission_verifier")
 logging.getLogger("git").setLevel(logging.INFO)
 logging.getLogger("urllib3").setLevel(logging.INFO)
 
