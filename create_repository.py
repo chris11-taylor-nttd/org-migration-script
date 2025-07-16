@@ -1,16 +1,16 @@
-from migrate_repo import get_github_instance
-import sys
 import logging
+import sys
 
-from github import Github
-from github.Repository import Repository
 from github.Organization import Organization
+from github.Repository import Repository
+
+from migrate_repo import get_github_instance
 
 ORGANIZATION = "launchbynttdata"
 PERMISSIONS = {
     "platform-team": "maintain",
     "platform-administrators": "admin",
-    "terraform-administrators": "admin"
+    "terraform-administrators": "admin",
 }
 
 logging.basicConfig(
@@ -22,6 +22,7 @@ logger = logging.getLogger("create_repository")
 logging.getLogger("git").setLevel(logging.INFO)
 logging.getLogger("urllib3").setLevel(logging.INFO)
 
+
 def create_repository(org: Organization, repo_name: str) -> Repository:
     repo = org.create_repo(
         name=repo_name,
@@ -31,19 +32,26 @@ def create_repository(org: Organization, repo_name: str) -> Repository:
         allow_rebase_merge=False,
         allow_squash_merge=True,
         allow_update_branch=True,
-        delete_branch_on_merge=True
+        delete_branch_on_merge=True,
+        auto_init=True,
     )
     return repo
+
 
 def set_repository_permissions(org: Organization, repo: Repository) -> None:
     for team_slug, team_permission in PERMISSIONS.items():
         if team_slug == "terraform-administrators" and not repo.name.startswith("tf-"):
-            logger.warning(f"Skipping setting permissions for team {team_slug} on {org.login}/{repo.name}, doesn't appear to be a Terraform repository. Set this permission manually if required.")
+            logger.warning(
+                f"Skipping setting permissions for team {team_slug} on {org.login}/{repo.name}, doesn't appear to be a Terraform repository. Set this permission manually if required."
+            )
             continue
         team = org.get_team_by_slug(team_slug)
-        logger.info(f"Setting permissions for team {team_slug} on {org.login}/{repo.name}")
+        logger.info(
+            f"Setting permissions for team {team_slug} on {org.login}/{repo.name}"
+        )
         team.update_team_repository(repo=repo, permission=team_permission)
         logger.info(f"Permissions for {team_slug} set to {team_permission}.")
+
 
 if __name__ == "__main__":
     try:
