@@ -53,10 +53,21 @@ def set_repository_permissions(org: Organization, repo: Repository) -> None:
         logger.info(f"Permissions for {team_slug} set to {team_permission}.")
 
 
+def create_initial_release(repo: Repository) -> None:
+    release = repo.create_git_release(
+        tag="0.1.0",
+        name="0.1.0",
+        message="Repository created",
+        draft=False,
+        prerelease=False,
+    )
+    logger.info(f"Created initial release and tag: {release}")
+
+
 if __name__ == "__main__":
     try:
         repo_name = sys.argv[1]
-    except:
+    except Exception:
         raise ValueError("Must provide the repo name as the first argument.")
 
     g = get_github_instance()
@@ -64,5 +75,6 @@ if __name__ == "__main__":
 
     repo = create_repository(org=org, repo_name=repo_name)
     set_repository_permissions(org=org, repo=repo)
+    create_initial_release(repo=repo)
 
     logger.info(f"Created {repo.html_url} and set initial permissions.")
